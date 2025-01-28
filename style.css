@@ -1,0 +1,182 @@
+* {
+    font-family: 'Microsoft JhengHei', sans-serif;
+}
+
+.stMainBlockContainer {
+    padding: 20px 50px 10px 50px;
+    /* background-color: #efefef; */
+}
+
+[data-testid="stDecoration"] {
+    /* display: none; */
+    background:linear-gradient(135deg, #26539c, #64748b);
+}
+
+.st-emotion-cache-1v0mbdj {
+    height: 400px;
+}
+
+
+[data-testid="stHeader"], [data-testid="stMain"] {
+    background-color: #F8F9FE;
+}
+
+/* [data-testid="stMain"] {
+    background-color: #F2FDFB;
+} */
+
+[data-testid="stSidebar"] {
+    background:linear-gradient(135deg, #1e293b, #64748b);
+    color: white; 
+    width: 280px;
+    min-width: 280px;
+    max-width: 280px;
+}
+
+[data-testid="stSidebar"] span {
+    font-size: 16px;
+    color: white;
+    margin-left: 5px;
+    font-family: 'Microsoft JhengHei', sans-serif;
+}
+
+[data-testid="stSidebar"] li {
+    margin: 8px 8px 0 8px;
+    /* background-color: #273D6B; */
+    border-radius: 5px;
+}
+
+[data-testid="stSidebar"] span:hover {
+    color: #fe8b8b; /* Slightly lighter gold on hover */
+}
+
+[data-testid="stSidebar"][aria-selected="true"] {
+    color: #fe8b8b;
+}
+
+
+[data-testid="stHeadingWithActionElements"] h2 {
+    font-family: 'Microsoft JhengHei', sans-serif;
+}
+
+
+[data-baseweb="tab-list"] {
+    display: flex;
+    margin-top: 30px;
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* background: linear-gradient(90deg, #1a1a2e, #16213e); */
+    /* border: 2px solid #0f3460; */
+    /* border-radius: 12px; */
+    padding: 10px 25px 10px 25px;
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); */
+}
+
+[data-baseweb="tab"] {
+    background-color: #7f7f7f2e;
+    color: #000000;
+    /* border: 0.5px solid #5a5a7c71; */
+    border-radius: 4px;
+    padding: 12px 50px;
+    margin: 3px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); */
+    cursor: pointer;
+}
+
+[data-baseweb="tab"]:hover {
+    background-color: #16213e;
+    border-color: #0f3460;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+[data-baseweb="tab"][aria-selected="true"] {
+    background: linear-gradient(90deg, #0f3460, #1a1a2e);
+    color: #ff7878;
+    border: 0.5px solid #e94560;
+    box-shadow: 0 6px 15px rgba(233, 69, 96, 0.5);
+    transform: scale(1.1);
+}
+
+[data-baseweb="tab"][aria-selected="true"] p {
+    font-weight: 550;
+}
+
+[data-testid="stTabs"] p {
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+
+[data-testid="stHeadingWithActionElements"]{
+    margin-top: 30px;
+}
+
+[data-testid="stNumberInputContainer"] {
+    border-radius: 0;
+    /* background-color: #000000; */
+}
+
+
+[data-testid="stWidgetLabel"] {
+    font-family: 'Microsoft JhengHei', sans-serif;
+}
+
+[data-testid="stMarkdownContainer"] h3 {
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-size: 20px;
+}
+
+[data-testid="stWidgetLabel"] p {
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-size: 14px;
+}
+
+[data-baseweb="select"] .st-cn {
+    border-radius: 4px;
+    background-color: #0f3460;
+    color: #F8F9FE;
+}
+
+[data-testid="stTooltipHoverTarget"] {
+    color: #F8F9FE;
+}
+
+[data-testid="stSelectboxVirtualDropdown"] li {
+    background-color: #0f3460;
+}
+
+[data-testid="stTooltipHoverTarget"]:hover {
+    color: #0f3460;
+}
+
+.st-e4 {
+    fill: #F8F9FE;
+}
+
+.stMetric * {
+    font-family: 'Microsoft JhengHei', sans-serif;
+}
+
+
+[data-testid="stSidebarUserContent"] {
+    order: -1; /* Make it appear before other elements */
+}
+
+/* Ensure the navigation comes later */
+[data-testid="stSidebarNav"] {
+    order: 1; /* Push it down */
+}
+
+.e121c1cl2 h3 {
+    padding: 30px 20px 30px 20px;
+    margin-top: 50px;
+    font-size: 20px;
+    line-height: 2.0;
+    text-align: justify;
+    font-weight: 400;
+}
