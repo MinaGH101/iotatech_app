@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import joblib
 from inverse import X_Recommender
+from streamlit_option_menu import option_menu
 
 # st.set_page_config(
 #     page_title="Kharazmi Activeclay Dashboard",
@@ -12,12 +13,24 @@ from inverse import X_Recommender
 #     initial_sidebar_state="expanded",
 # )
 
+selected = option_menu(None, ["Home", "Upload",  "Tasks", 'Settings'], 
+    icons=['house', 'cloud-upload', "list-task", 'gear'], 
+    menu_icon="cast", default_index=0, orientation="horizontal",
+    styles={
+        "container": {"background-color": "#fafafa", "padding" : "15px 600px 15px 15px"},
+        "icon": {"font-size": "15px"}, 
+        "nav-link": {"font-size": "15px", "text-align": "left", "margin-right":"10px"},
+        "nav-link-selected": {"background-color": "#64748b", "font-weight": "400"},
+    }
+)
+
+
 st.header('🔧 Recommendation Mode')
 
-st.sidebar.write("""
-recommends parameters to reach a specific BET (m2/g).
-Based on the practical experiments, it can be observed that the optimal values are relatively consistent across different clay types, and there is little dependency.
-""")
+# st.sidebar.write("""
+# recommends parameters to reach a specific BET (m2/g).
+# Based on the practical experiments, it can be observed that the optimal values are relatively consistent across different clay types, and there is little dependency.
+# """)
 
 def local_css(file_name):
     with open(file_name) as f:
@@ -48,7 +61,7 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-model  = joblib.load('./xgb.pkl')
+model  = joblib.load('./data/xgb.pkl')
 
 col1, col2, col3, col4 = st.columns([1, 1,  1 ,1])
 

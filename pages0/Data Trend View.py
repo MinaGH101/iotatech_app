@@ -1,3 +1,4 @@
+
 import streamlit as st 
 import numpy as np 
 import matplotlib.pyplot as plt
@@ -5,21 +6,27 @@ import pandas as pd
 from sklearn.impute import KNNImputer
 from PIL import Image
 import plotly.figure_factory as ff
-from tools import *
+
 import plotly.express as px
 from pygwalker.api.streamlit import StreamlitRenderer
 from scipy.signal import savgol_filter
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from st_aggrid import AgGrid
+from streamlit_option_menu import option_menu
 
 
-# st.set_page_config(
-#     page_title="IOTA Tech Dashboard",
-#     page_icon="🏭",
-#     layout="wide",
-#     initial_sidebar_state="expanded",
 
-   
-# )
+selected = option_menu(None, ["Home", "Upload",  "Tasks", 'Settings'], 
+    icons=['house', 'cloud-upload', "list-task", 'gear'], 
+    menu_icon="cast", default_index=0, orientation="horizontal",
+    styles={
+        "container": {"background-color": "#fafafa", "padding" : "15px 600px 15px 15px"},
+        "icon": {"font-size": "15px"}, 
+        "nav-link": {"font-size": "15px", "text-align": "left", "margin-right":"10px"},
+        "nav-link-selected": {"background-color": "#64748b", "font-weight": "400"},
+    }
+)
+
 
 def local_css(file_name):
     with open(file_name) as f:
@@ -47,9 +54,9 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
     )
 
-st.header('📈 Data Trend View')
+st.header('Data Trend View')
 if 'D' not in st.session_state:
-    st.session_state.D = pd.read_csv('./pump_data.csv')
+    st.session_state.D = pd.read_csv('./data/pump_data.csv')
     st.session_state.D = st.session_state.D.dropna(how='any', axis=0)
     st.session_state.temp_params = st.session_state.D.columns.to_list()
     st.session_state.date_time = pd.to_datetime(st.session_state.D['date'])
@@ -71,26 +78,44 @@ date['date'] = pd.to_datetime(Date_time).dt.date
 sd1 = date['date'].iloc[0]
 ed1 = date['date'].iloc[-1]
 
-tab0, tab1, tab2, tab3, tab4 = st.tabs(['Data Overview', 'X_Y Plot', 'X_Y_Z Plot', 'X_Time Plot', 'Hist Plot'])
+tab0, tab1, tab2, tab3, tab4 = st.tabs(['Overview', '2D Plot', '3D Plot', 'Time Plot', 'Histogram'])
 
 
 with tab0: 
-    
     # df = pd.read_excel(Data) 
     p = StreamlitRenderer(Data)
     p.explorer()
 
+    filt = st.checkbox('Filter data', key='filt')
+    if filt:
+        AgGrid(Data)
+
+
+
 
 with tab1:
+    c1, c2, c3, c4 = st.columns([1,1,1, 1])
+    with c1:
+        impute = st.selectbox('impute method', ['K_neighbors', 'remove' , 'mean', 'mode', 'interpolate'], key='impute1')
 
-    plot_number = st.number_input('number of plots to compare ...', value=1, key="plot_number1")
-    st.divider()
+    with c2:
+        if impute == 'K_neighbors':
+            n_nei = st.slider('n neighbors', 0, 20, 5, step=1, key='knn1')
+
+        if impute == 'interpolate':
+            n_nei = st.selectbox('interpolate', ['linear', 'spline' , 'poly'], key='interpolate1')
+
+    with c3:
+        zeros = st.pills('how to handel zeros', ['replace with nan', 'stay still', 'mean'], key='zeros1')
+
+    with c4:
+        plot_number = st.number_input('number of plots to compare ...', value=1, key="plot_number1")
 
     for i in range(plot_number):
-        st.subheader(f'plot number {i+1}', divider=True)
-        col0, col1, col2 = st.columns([2, 2, 4])
+        st.subheader(f'Plot number {i+1}', divider=True)
+        col0, col1, col2 = st.columns([6, 2 , 2])
 
-        with col0:
+        with col1:
                 X_name = st.selectbox(
                     'Select X-axis',
                     (Data.columns), key=f'X_name{i}')
@@ -107,7 +132,7 @@ with tab1:
                 #     'Select a color',
                 #     ('blue', 'red', 'forestgreen', 'purple', 'blueviolet', 'aqua'))
 
-        with col1:
+        with col2:
             
             with st.form(f"my_form{i}", clear_on_submit=False):
                 X_min = st.number_input("X_min", value=Data[X_name].min(), key=f"X_min{i}")
@@ -138,7 +163,7 @@ with tab1:
 
                 reset_button = st.form_submit_button("Set / Reset")
 
-        with col2:
+        with col0:
 
             fig = px.scatter(Data, x=X_name, y=y_name, range_x=[Xmin, Xmax], range_y=[ymin, ymax], color=color)
             st.plotly_chart(fig, use_container_width=True, key=f'sc_plot{i}')
@@ -147,16 +172,32 @@ with tab1:
 
 with tab2:
 
-    plot_number = st.number_input('number of plots to compare ...', value=1, key="plot_number2")
-    st.divider()
+    c1, c2, c3, c4 = st.columns([1,1,1, 1])
+    with c1:
+        impute = st.selectbox('impute method', ['K_neighbors', 'remove' , 'mean', 'mode', 'interpolate'], key='impute2')
+
+    with c2:
+        if impute == 'K_neighbors':
+            n_nei = st.slider('n neighbors', 0, 20, 5, step=1, key='knn2')
+
+        if impute == 'interpolate':
+            n_nei = st.selectbox('interpolate', ['linear', 'spline' , 'poly'], key='interpolate2')
+
+    with c3:
+        zeros = st.pills('how to handel zeros', ['replace with nan', 'stay still', 'mean'], key='zeros2')
+
+    with c4:
+        plot_number = st.number_input('number of plots to compare ...', value=1, key="plot_number2")
+
+
 
     for i in range(plot_number):
         
-        st.subheader(f'plot number {i+1}', divider=True)
+        st.subheader(f'Plot number {i+1}', divider=True)
 
-        col0, col1, col2 = st.columns([1.5, 1.5, 5])
+        col0, col1, col2 = st.columns([5, 1.5, 1.5])
 
-        with col0:
+        with col1:
                 X_name = st.selectbox(
                     'Select X-axis',
                     (Data.columns), key=f"X_name{i}{i}")
@@ -179,7 +220,7 @@ with tab2:
                 X, y, z = Data[X_name], Data[y_name], Data[z_name]
 
                 
-        with col1:
+        with col2:
             
             with st.form(f"my_form1{i}{i}", clear_on_submit=False):
                 X_min = st.number_input("X_min", value=Data[X_name].min(), key=f"X_min2{i}{i}")
@@ -223,7 +264,7 @@ with tab2:
 
                 reset_button = st.form_submit_button("Set / Reset")
 
-        with col2:
+        with col0:
 
             fig = px.scatter_3d(Data, x=X_name, y=y_name, z=z_name, 
                                 range_x=[Xmin, Xmax], 
@@ -236,12 +277,28 @@ with tab2:
 
 with tab3:
 
-    plot_number = st.number_input('number of plots to compare ...', value=1, key="plot_number3")
-    st.divider()
+    c1, c2, c3, c4 = st.columns([1,1,1, 1])
+    with c1:
+        impute = st.selectbox('impute method', ['K_neighbors', 'remove' , 'mean', 'mode', 'interpolate'], key='impute3')
+
+    with c2:
+        if impute == 'K_neighbors':
+            n_nei = st.slider('n neighbors', 0, 20, 5, step=1, key='knn3')
+
+        if impute == 'interpolate':
+            n_nei = st.selectbox('interpolate', ['linear', 'spline' , 'poly'], key='interpolate3')
+
+    with c3:
+        zeros = st.pills('how to handel zeros', ['replace with nan', 'stay still', 'mean'], key='zeros3')
+
+    with c4:
+        plot_number = st.number_input('number of plots to compare ...', value=1, key="plot_number3")
+
+
 
     for i in range(plot_number):
 
-        st.subheader(f'plot number {i+1}', divider=True)
+        st.subheader(f'Plot number {i+1}', divider=True)
         col0, col1 = st.columns([2, 6])
 
         with col0:

@@ -1,3 +1,4 @@
+
 import streamlit as st
 import streamlit_authenticator as stauth
 import yaml
@@ -6,6 +7,11 @@ from PIL import Image
 # import pages
 import pathlib
 from pathlib import Path
+from streamlit_option_menu import option_menu
+
+# with st.sidebar:
+#     st.markdown("[Home :material/thumb_up:](pages0/Data Trend View.py)")
+#     # st.page_link("pages0/Data Trend View.py", label='home', icon=":material/thumb_up:")
 
 
 
@@ -21,6 +27,24 @@ from pathlib import Path
 # pg.run()
 
 # icon_home = Path("./logo.png").as_posix()
+
+
+
+
+selected = option_menu(None, ["Home", "Upload",  "Tasks", 'Settings'], 
+    icons=['house', 'cloud-upload', "list-task", 'gear'], 
+    menu_icon="cast", default_index=0, orientation="horizontal",
+    styles={
+        "container": {"background-color": "#fafafa", "padding" : "15px 600px 15px 15px"},
+        "icon": {"font-size": "15px"}, 
+        "nav-link": {"font-size": "15px", "text-align": "left", "margin-right":"10px"},
+        "nav-link-selected": {"background-color": "#64748b", "font-weight": "400"},
+    }
+)
+
+
+# st.logo('images/logo.png', size='medium')
+
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
@@ -48,21 +72,33 @@ st.sidebar.markdown(
 tab1, tab2 = st.tabs(['Basic Information', 'Machine Learning Results'])
 
 with tab1:
+
+
+    # st.page_link("pages0/Data Trend View.py", label='home', icon=":material/thumb_up:")
+
     st.header("⚙️ Iota tech introduction")
+    st.divider()
+    # st.page_link("pages0/Data Trend View.py", label='home', icon=":material/thumb_up:")
+
+
+
 
     col1, col2 = st.columns([1, 1])
     with col1:
         st.subheader('The Iota AI Group began its work in 2020 with the aim of developing and applying AI in industry. This group, composed of specialists in AI, materials and metallurgy engineers, chemical engineers, and software engineers, focuses on providing and implementing solutions to industrial challenges using AI tools.')
-    with col2:
-        image11 = Image.open('images/signature.png')
-        st.image(image11)
-
-    col11, col22 = st.columns([1, 1])
-    with col11:
-        image11 = Image.open('images/img80.jpg')
-        st.image(image11)
-    with col22:
+        
         st.subheader('The Iota AI Group leverages advanced AI tools to analyze and utilize industry-specific data, aiming to address the unique challenges and optimize processes within each sector. By tailoring AI-driven solutions to the distinct needs of various industries, the group strives to enhance efficiency, resolve complex issues, and drive innovation.')
+    
+    with col2:
+        image11 = Image.open('images/4096.jpg')
+        st.image(image11, width=600)
+
+    # col11, col22 = st.columns([1, 1])
+    # with col11:
+    #     image11 = Image.open('images/img80.jpg')
+    #     st.image(image11)
+    # with col22:
+    #     st.subheader('The Iota AI Group leverages advanced AI tools to analyze and utilize industry-specific data, aiming to address the unique challenges and optimize processes within each sector. By tailoring AI-driven solutions to the distinct needs of various industries, the group strives to enhance efficiency, resolve complex issues, and drive innovation.')
 
 
 

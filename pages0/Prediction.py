@@ -8,17 +8,21 @@ from tools import *
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+from streamlit_option_menu import option_menu
 
 
 
-# st.subheader('🏭 Process Prediction')
+selected = option_menu(None, ["Home", "Upload",  "Tasks", 'Settings'], 
+    icons=['house', 'cloud-upload', "list-task", 'gear'], 
+    menu_icon="cast", default_index=0, orientation="horizontal",
+    styles={
+        "container": {"background-color": "#fafafa", "padding" : "15px 600px 15px 15px"},
+        "icon": {"font-size": "15px"}, 
+        "nav-link": {"font-size": "15px", "text-align": "left", "margin-right":"10px"},
+        "nav-link-selected": {"background-color": "#64748b", "font-weight": "400"},
+    }
+)
 
-# st.set_page_config(
-#     page_title="IOTA Tech Dashboard",
-#     page_icon="🏭",
-#     layout="wide",
-#     initial_sidebar_state="expanded",
-# )
 
 def local_css(file_name):
     with open(file_name) as f:
@@ -32,7 +36,6 @@ local_css("style.css")
 
 with open("images/hmi.svg", "r") as svg_file:
     svg_content = svg_file.read()
-st.header('⚙️ Process output prediction')
 
 
 st.markdown("""
@@ -64,8 +67,8 @@ st.markdown("""
 # DATA PREPARATION  #############################################################################
 
 if 'M' not in st.session_state:
-    st.session_state.M = pd.read_excel('./ais_metal_total_5.0_lag_ordered_new.xlsx')
-    st.session_state.temp_params0 = pd.read_excel('./final_metal_features.xlsx')['Parameter Name'].to_list()
+    st.session_state.M = pd.read_excel('./data/ais_metal_total_5.0_lag_ordered_new.xlsx')
+    st.session_state.temp_params0 = pd.read_excel('./data/final_metal_features.xlsx')['Parameter Name'].to_list()
 
 M = st.session_state.M
 temp_params = st.session_state.temp_params0
@@ -87,7 +90,7 @@ ed10 = date0['date'].iloc[-1]
 
 
 if 'D' not in st.session_state:
-    st.session_state.D = pd.read_csv('./pump_data.csv')
+    st.session_state.D = pd.read_csv('./data/pump_data.csv')
     st.session_state.D = st.session_state.D.dropna(how='any', axis=0)
     st.session_state.temp_params = st.session_state.D.columns.to_list()
     st.session_state.date_time = pd.to_datetime(st.session_state.D['date'])
@@ -114,6 +117,7 @@ ed1 = date['date'].iloc[-1]
 # y = Data[y_]
 
 #############################################################################################
+st.header('Process prediction')
 
 
 col1, col2 = st.columns([4, 1])

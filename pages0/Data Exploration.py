@@ -11,17 +11,33 @@ import seaborn as sns
 from scipy import stats
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import shap
+import os
 import joblib
 import plotly.graph_objects as go
+import streamlit.components.v1 as components
+from streamlit_option_menu import option_menu
 
+
+
+selected = option_menu(None, ["Home", "Upload",  "Tasks", 'Settings'], 
+    icons=['house', 'cloud-upload', "list-task", 'gear'], 
+    menu_icon="cast", default_index=0, orientation="horizontal",
+    styles={
+        "container": {"background-color": "#fafafa", "padding" : "15px 600px 15px 15px"},
+        "icon": {"font-size": "15px"}, 
+        "nav-link": {"font-size": "15px", "text-align": "left", "margin-right":"10px"},
+        "nav-link-selected": {"background-color": "#64748b", "font-weight": "400"},
+    }
+)
 
 # file = st.file_uploader("file")
-
+# st.logo('images/logo.png', size='medium')
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 local_css("style.css")
+
 
 st.sidebar.markdown(
     f"""
@@ -35,9 +51,20 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
     )
 
-st.header('🔎 Data Exploration')
+
+
+# html_code = """
+# <div class="align-center justify-item-center">
+#     <h3>    <img style="width:50px;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KCjwhLS0gVXBsb2FkZWQgdG86IFNWRyBSZXBvLCB3d3cuc3ZncmVwby5jb20sIEdlbmVyYXRvcjogU1ZHIFJlcG8gTWl4ZXIgVG9vbHMgLS0+Cjxzdmcgd2lkdGg9IjgwMHB4IiBoZWlnaHQ9IjgwMHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGlkPSJTeXN0ZW0gLyBEYXRhIj4KPHBhdGggaWQ9IlZlY3RvciIgZD0iTTE4IDEyVjE3QzE4IDE4LjY1NjkgMTUuMzEzNyAyMCAxMiAyMEM4LjY4NjI5IDIwIDYgMTguNjU2OSA2IDE3VjEyTTE4IDEyVjdNMTggMTJDMTggMTMuNjU2OSAxNS4zMTM3IDE1IDEyIDE1QzguNjg2MjkgMTUgNiAxMy42NTY5IDYgMTJNMTggN0MxOCA1LjM0MzE1IDE1LjMxMzcgNCAxMiA0QzguNjg2MjkgNCA2IDUuMzQzMTUgNiA3TTE4IDdDMTggOC42NTY4NSAxNS4zMTM3IDEwIDEyIDEwQzguNjg2MjkgMTAgNiA4LjY1Njg1IDYgN002IDEyVjciIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9nPgo8L3N2Zz4=" alt="Logo" width="100">
+# Data Exploration</h3>
+# </div>
+# """
+
+# # Render the HTML code
+# components.html(html_code, height=200)  
+
 if 'D' not in st.session_state:
-    st.session_state.D = pd.read_csv('./pump_data.csv')
+    st.session_state.D = pd.read_csv('./data/pump_data.csv')
     st.session_state.D = st.session_state.D.dropna(how='any', axis=0)
     st.session_state.temp_params = st.session_state.D.columns.to_list()
     st.session_state.date_time = pd.to_datetime(st.session_state.D['date'])
@@ -60,8 +87,18 @@ sd1 = date['date'].iloc[0]
 ed1 = date['date'].iloc[-1]
 
 
-y_ = st.selectbox('Target Column', options=Data.columns)
-y = Data[y_]
+st.header('Data Exploration')
+c1, c2, c3, c4= st.columns([1, 0.3, 1, 1])
+with c1:
+    # st.divider()
+    y_ = st.selectbox('Target Column', options=Data.columns)
+    y = Data[y_]
+with c3:
+    scale = st.radio('Render', options=['high', 'medium', 'low'], horizontal=True, key='scale1')
+with c4:
+    scale = st.radio('Digit accuracy', options=['1', '2', '3'], horizontal=True, key='scale2')
+
+
 
 import pickle as pk
 from sklearn.linear_model import ARDRegression
@@ -91,22 +128,38 @@ with tab1:
 
 with tab2:
 
-    st.subheader('Data Parameters Linear Relations')
-    method = st.radio('Correlation Method', options=['pearson', 'kendall', 'spearman'], horizontal=True)
-    corr = Data.corr(method = method)
-    st.dataframe(corr)
-
-    st.divider()
 
     options = st.multiselect(
     "Parameters",
     list(Data.columns),
     list(Data.columns)[:7])
-    method2 = st.radio('Correlation Method', options=['pearson', 'kendall', 'spearman'], horizontal=True, key='method2')
-    corr_p = Data[options].corr(method=method2)
-    fig = px.imshow(corr_p, text_auto=True, aspect="auto")
-    st.plotly_chart(fig, use_container_width=True)
 
+
+    c1, c2 = st.columns([3.5, 1])
+
+    with c2:
+        impute = st.selectbox('impute method', ['K_neighbors', 'remove' , 'mean', 'mode', 'interpolate'], key='impute1')
+        if impute == 'K_neighbors':
+            n_nei = st.slider('n neighbors', 0, 20, 5, step=1, key='knn1')
+
+        if impute == 'interpolate':
+            n_nei = st.selectbox('interpolate', ['linear', 'spline' , 'poly'], key='interpolate1')
+        zeros = st.pills('how to handel zeros', ['replace with nan', 'stay still', 'mean'], key='zeros1')
+        method2 = st.select_slider('Correlation Method', options=['pearson', 'kendall', 'spearman'], key='method2')
+
+    with c1:
+        corr_p = Data[options].corr(method=method2)
+        fig = px.imshow(corr_p, text_auto=True, aspect="auto")
+        st.plotly_chart(fig, use_container_width=True)
+
+
+    st.subheader('Data Parameters Linear Relations')
+    
+
+    method = st.radio('Correlation Method', options=['pearson', 'kendall', 'spearman'], horizontal=True)
+    
+    corr = Data.corr(method = method)
+    st.dataframe(corr)
 
     # sns.set(style='white')
 

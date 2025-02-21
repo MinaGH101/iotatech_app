@@ -6,6 +6,8 @@ from PIL import Image
 # import pages
 import pathlib
 from pathlib import Path
+from streamlit_option_menu import option_menu
+from st_on_hover_tabs import on_hover_tabs
 
 st.set_page_config(
     page_title="IOTA Tech Dashboard",
@@ -14,13 +16,19 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-pg = st.navigation([st.Page("pages0/IOTATECH.py", icon='🏭'),
-                    st.Page("pages0/Data Trend View.py", icon='📈'),
-                    st.Page("pages0/Data Exploration.py", icon='🔎'),
-                    st.Page("pages0/Prediction.py", icon='⚙️'),
-                    st.Page("pages0/Prediction R&D.py", icon='🗳'),
-                    st.Page('pages0/Recommendation.py', icon='🔧'),
-                    st.Page('pages0/User Guide.py', icon='📄')], expanded=True)
+
+# st.page_link("pages0/Data Trend View.py", label='home', icon=":material/thumb_up:")
+
+pg = st.navigation([st.Page("pages0/IOTATECH.py", title='IOTA TECH', icon=":material/home:"),
+                    st.Page("pages0/Data Trend View.py", title='DATA TREND', icon=":material/bar_chart:"),
+                    st.Page("pages0/Data Exploration.py", title='DATA EXPLORATION', icon=":material/query_stats:"),
+                    st.Page("pages0/Prediction.py", title='PREDICTION', icon=":material/factory:"),
+                    st.Page("pages0/Optimization.py", title='OPTIMIZATION', icon=":material/factory:"),
+                    st.Page("pages0/Prediction R&D.py", title='LAB PREDICTION', icon=":material/experiment:"),
+                    st.Page('pages0/Recommendation.py', title='RECOMMEND', icon=":material/lightbulb:"),
+                    st.Page('pages0/Reports.py', title='REPORT', icon=":material/news:"),
+                    st.Page('pages0/History.py', title='HISTORY', icon=":material/schedule:"),
+                    st.Page('pages0/User Guide.py', title='HELP', icon=":material/help:")], expanded=True)
 pg.run()
 
 def local_css(file_name):

@@ -3,19 +3,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import joblib
+from streamlit_option_menu import option_menu
 
 
-# st.set_page_config(
-#     page_title="IOTA Tech Dashboard",
-#     page_icon="🏭",
-#     layout="wide",
-#     initial_sidebar_state="expanded",
-# )
+selected = option_menu(None, ["Home", "Upload",  "Tasks", 'Settings'], 
+    icons=['house', 'cloud-upload', "list-task", 'gear'], 
+    menu_icon="cast", default_index=0, orientation="horizontal",
+    styles={
+        "container": {"background-color": "#fafafa", "padding" : "15px 600px 15px 15px"},
+        "icon": {"font-size": "15px"}, 
+        "nav-link": {"font-size": "15px", "text-align": "left", "margin-right":"10px"},
+        "nav-link-selected": {"background-color": "#64748b", "font-weight": "400"},
+    }
+)
 
-st.header('📈 Process output prediction')
-st.sidebar.write("""
-predicts BET (m2/g) based on raw clay analysis and process parameters.
-""")
+st.header('Lab result prediction')
+
 
 def local_css(file_name):
     with open(file_name) as f:
@@ -46,7 +49,7 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-model  = joblib.load('./xgb.pkl')
+model  = joblib.load('./data/xgb.pkl')
 
 col1, col2, col3, col4 = st.columns([1.5, 1.5,  1 ,1])
 
