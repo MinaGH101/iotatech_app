@@ -67,7 +67,7 @@ st.markdown("""
 # DATA PREPARATION  #############################################################################
 
 if 'M' not in st.session_state:
-    st.session_state.M = pd.read_excel('./data/ais_metal_total_5.0_lag_ordered_new.xlsx')
+    st.session_state.M = pd.read_csv('./data/ais_metal_total_5.0_lag_ordered_new.csv')
     st.session_state.temp_params0 = pd.read_excel('./data/final_metal_features.xlsx')['Parameter Name'].to_list()
 
 M = st.session_state.M
