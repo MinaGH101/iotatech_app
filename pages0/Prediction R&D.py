@@ -49,7 +49,7 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-model  = joblib.load('./data/xgb.pkl')
+model  = joblib.load('./data/gb.pkl')
 
 col1, col2, col3, col4 = st.columns([1.5, 1.5,  1 ,1])
 

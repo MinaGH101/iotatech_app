@@ -231,7 +231,7 @@ with col33:
 # st.image(image)
 
 """ _______________________________________________________________________________________________"""
-# model  = joblib.load('./xgb.pkl')
+# model  = joblib.load('./gb.pkl')
 
 options = st.multiselect(
 "Parameters",

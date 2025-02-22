@@ -29,4 +29,3 @@ streamlit-on-Hover-tabs
 streamlit-option-menu
 toml
 tqdm
-xgboost
